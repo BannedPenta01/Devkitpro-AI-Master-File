@@ -2833,6 +2833,31 @@ The makefiles are supposed to be easily readable and editable, only use the mini
 
 $(DEVKITPPC)$(DEVKITARM) as well as $(DEVKITPRO) are always supposed to be referenced as $(DEVKITPPC)$(DEVKITARM) as well as $(DEVKITPRO), not $(DEDEVKITPRO) or $(DEDEKITKITPRO)
 
+Show thinking
+"The Time Sink Saga: When Compilation Stalls!"
+
+SCENE: A developer, fueled by dreams of homebrew glory, watches the progress bar crawl. Each tick feels like an eternity. The compiler, a diligent but slow artist, meticulously paints every pixel of optimization and debug information, oblivious to the ticking clock.
+
+THE VILLAIN: "The Optimization Overload!" Your previous Makefile was designed for maximum performance, using aggressive optimization flags (-O3) and including comprehensive debugging symbols (-g) for every build. While crucial for a polished final product, these settings demand immense processing power and time during development, slowing down iteration to a glacial pace. It was like trying to sculpt a masterpiece with a hammer, rather than sketching with a pencil first!
+
+THE HERO'S STRATEGY (from the wii-makefile):
+
+To combat this "Time Sink," your Makefile now offers a strategic choice:
+
+"The Rapid Prototyper" (Debug Build):
+
+Command: make or make debug
+
+Action: This mode prioritizes speed. It uses a lighter touch with optimization (-O1) and still includes essential debug information (-g). This is your quick sketch mode, perfect for rapid testing and catching early bugs without the long waits.
+
+"The Masterpiece Forge" (Release Build):
+
+Command: make release
+
+Action: When you're ready for the grand unveiling, this mode unleashes the full power of the compiler. It applies the most aggressive optimizations (-O3) and strips away unnecessary debug data (-DNDEBUG), resulting in the smallest, fastest possible executable. This is where your creation truly shines, ready for prime time!
+
+THE OUTCOME: With these distinct build targets in your wii-makefile, you now command the pace of your development. Sketch quickly, refine efficiently, and then forge a truly optimized epic!
+
 End of prompt
 
 This entire document, spanning thousands of lines, is meticulously designed to serve as a comprehensive training dataset for Gemini AI, specifically tailored for DevkitPro development knowledge. By ingesting this prompt, Gemini AI should gain proficiency in:
