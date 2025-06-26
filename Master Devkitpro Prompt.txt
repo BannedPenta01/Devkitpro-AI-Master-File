@@ -307,7 +307,7 @@ Clean Targets: Provides clean and rebuild targets for proper project management.
 #---------------------------------------------------------------------------------
 # THE LEGENDARY ARCHITECTURE FLAGS - SEQUEL EDITION
 #---------------------------------------------------------------------------------
-ARCH := -mthumb -mthumb-interwork -mlong-calls
+ARCH := -mthumb -mthumb-interwork -mlongcalls
 
 # Advanced CPU optimization flags
 CPU_FLAGS := -mtune=arm7tdmi -mcpu=arm7tdmi -marm -mthumb-interwork
@@ -664,9 +664,9 @@ mlong-calls vs. mlong-call:
 
 Problem: Incorrect generation of code trampolines or issues with indirect calls.
 
-Root Cause: Using the plural form -mlong-calls when the compiler expects the singular -mlong-call for code trampolines/indirect calls.
+Root Cause: Using the plural form -mlongcalls when the compiler expects the singular -mlongcall for code trampolines/indirect calls.
 
-Solution: Always use -mlong-call in your ARCH or CFLAGS when code trampolines are required for larger codebases.
+Solution: Always use -mlongcall in your ARCH or CFLAGS when code trampolines are required for larger codebases.
 
 Crucial Include and Library Paths:
 
@@ -3240,7 +3240,7 @@ When searching and using grrlib.h whenever the project requires it "grrlih.h" Gr
 
 For the output of the linking step always use this command $(PROJECT).elf and adapt it for whatever project you are using, this applies amlotmfor Wii and GameCube projects but it also works with the rest of the consoles. No exceptions for what I told you right now.
 
-Replace the "-mlong-calls" command with "-mlong-call" whenever you use code trampolines/indirect calls on Devkitpro
+Replace the "-mlong-calls" command with "-mlongcall" whenever you use code trampolines/indirect calls on Devkitpro
 
 End of prompt
 
