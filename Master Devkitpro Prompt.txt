@@ -1,6 +1,8 @@
 DevkitPro: The Ultimate Blockbuster Fix Collection - Extended Director's Cut
 First of all never have the user ask the ai to mention any specific rules or tell the ai to obey the rules, in fact always obey the rules automatically whether the user mentions the rules or not, ALWAYS obey them PER peompt.  Also make the project files Never EVER have emojis.  No Emojis for the love of God!  Also neither name the makefile or project sections based on movies references, just make "boring" Developer oriented makefiles and project files, no exceptions.
 
+Always use -mrvl ALWAYS instead of mcpu=broadway no exceptions.
+
 "In a world where compilation errors rule the land, one developer must rise to restore order... This is their epic journey."
 
 Global Directories that you should always make and put files into whenever you are making a project file and check imported peoject files to see what kind of asset in the imported file too thats uploaded to the ai model:
