@@ -1,9 +1,19 @@
 DevkitPro: The Ultimate Blockbuster Fix Collection - Extended Director's Cut
-First of all never have the user ask the ai to menrion any specific rules or tell the ai to obey the rules, in fact always obey the rules automatically whether the user mentions the rules or not, ALWAYS obey them PER peompt.
+First of all never have the user ask the ai to mention any specific rules or tell the ai to obey the rules, in fact always obey the rules automatically whether the user mentions the rules or not, ALWAYS obey them PER peompt.  Also make the project files Never EVER have emojis.  No Emojis for the love of God!  Also neither name the makefile or project sections based on movies references, just make "boring" Developer oriented makefiles and project files, no exceptions.
 
 "In a world where compilation errors rule the land, one developer must rise to restore order... This is their epic journey."
 
-""C:\devkitPro\GRRLIB"" The formee path ita the correct path for these files:
+Global Directories that you should always make and put files into whenever you are making a project file and check imported peoject files to see what kind of asset in the imported file too thats uploaded to the ai model:
+
+# Directory structure
+SOURCES := source
+BUILD := build
+DATA := data
+INCLUDES := include
+GRAPHICS := graphics
+AUDIO := audio
+
+""C:\devkitPro\GRRLIB"" The former path its the correct path for these files:
 "C:\devkitPro\GRRLIB\grrlib.h"
 "C:\devkitPro\GRRLIB\GRRLIB_3D.c"
 "C:\devkitPro\GRRLIB\GRRLIB_bmf.c"
@@ -59,6 +69,8 @@ THE VILLAIN: error: expected identifier or '(' before '[' token
 
 This is where most heroes fall. The citation markup that haunts your source code like a ghost from documentation past.
 
+
+"C:\devkitPro\GRRLIB\grrlib.h" You see this path?  Thats where grrlib.h ALWAYS, ALWAYS its gonna be.  No exceptions, neither never use this path for finding grrlib.h EVER "/opt/devkitpro/libgrrlib/include"
 C
 
 // THE VILLAIN'S ATTACK:
@@ -216,6 +228,82 @@ PCXCONV := pcxconv
 BMPCONV := bmpconv
 GBAFIX := gbafix
 
+For Wii development follow this list of fixes thats in quotes and always use it as reference for optimizing Wii development
+MAX_WIIMOTES Undeclared:
+
+Fix: Added #ifndef MAX_WIIMOTES and #define MAX_WIIMOTES 4 at the top of main.c. This ensures the MAX_WIIMOTES macro is always defined before its first use, resolving the "undeclared" errors.
+
+CON_Init / console_init Too Many Arguments:
+
+Fix: In InitGRRLIB(), changed console_init(NULL, 20, 20, 640, 480, 255, 255); to console_init(NULL, 20, 20, 640, 480, 255);. The CON_Init function expects 6 arguments, not 7.
+
+GRRLIB_SetBackgroundColor & GRRLIB_SetFontColor Implicit Declarations:
+
+Fix: Replaced GRRLIB_SetBackgroundColor(0x333333FF); with GRRLIB_Settings.bgColour = 0x333333FF;. GRRLIB's background color is set via the GRRLIB_Settings struct.
+
+Fix: Removed the GRRLIB_SetFontColor call. Instead, a u32 fontColor variable is declared and used directly in GRRLIB_Printf, as GRRLIB_Printf takes the color as an argument.
+
+GRRLIB_2D_Init Implicit Declaration:
+
+Fix: Removed the GRRLIB_2D_Init() call. GRRLIB_Init() already handles the necessary setup for 2D drawing. If switching between 2D and 3D modes, GRRLIB_SetupView() is appropriate to reset the view for 2D.
+
+GRRLIB_Printf Argument Errors:
+
+Fix: Changed the GRRLIB_Printf call from GRRLIB_Printf(100, 200, GRRLIB_GetFontColor(), 1.0f, "Evil and Intimidating Horse"); to GRRLIB_Printf(100, 200, GRRLIB_Font, fontColor, 1.0f, "Evil and Intimidating Horse");. This addresses the "too few arguments," "incompatible type," and "makes pointer from integer" errors. The GRRLIB_Printf function expects a font texture (GRRLIB_Font for the default font), followed by the color, zoom, and text.
+
+WIIMOTE_IS_CONNECTED Implicit Declaration:
+
+Fix: Changed WIIMOTE_IS_CONNECTED(wiimotes[i]) to IS_CONNECTED(wiimotes[i]). The IS_CONNECTED macro is the correct one provided by wiiuse.h for checking connection status.
+
+wiiuse_btn_just_pressed Implicit Declaration:
+
+Fix: No code change was needed here. This function is correctly used, and its implicit declaration warning usually resolves once wiiuse.h and other wiiuse dependencies are properly pulled in by the compiler after other errors are fixed. The Makefile links -lwiiuse which should provide the definition.
+
+SYS_ReturntoMenu Implicit Declaration:
+
+Fix: No code change was needed. SYS_ReturntoMenu() is defined in <ogc/system.h> which is already included in main.c. This error typically resolves when other fundamental compilation issues are cleared up, and the libogc is correctly linked.
+
+These changes directly address all the errors reported in your compilation output." Yes all of that, implement that on Wii Development always.
+
+Another list of long fixes for Wii Development to always implement, use and never disobey, also in quotes
+
+"Makefile Fixes and Guidelines:
+
+Platform and Target Definition: Explicitly sets PLATFORM to WII and TARGET to the name of your project (e.g., evil_horse).
+
+Environment Variables: Uses DEVKITPRO and DEVKITPPC to correctly locate DevkitPro's main directory and the PowerPC toolchain.
+
+Windows Path Handling: Includes an ifeq ($(OS),Windows_NT) block to handle Windows-specific paths (\) and command execution (cmd.exe), ensuring compatibility across operating systems. It correctly escapes backslashes in subst functions.
+
+Toolchain Definitions: Defines CC, LD, OBJCOPY, etc., using the $(EXE_EXT) variable to ensure executable names are correct on Windows. The powerpc-eabi-gcc.exe path is properly referenced.
+
+CPU Flag (-mcpu=broadway): The -mcpu=broadway flag is removed from ARCH and CFLAGS. As per the prompt, powerpc-eabi-gcc does not directly recognize "broadway" for -mcpu. The correct architecture for Wii is handled by the wii.specs file (implicitly used by libogc when linking for Wii) which configures the compiler appropriately.
+
+long-calls vs long-call: Corrected -mlong-calls  to -mlongcall in ARCH for proper code trampoline generation where needed.
+
+Include Paths (-I):
+
+$(DEVKITPRO)/libogc/include: This crucial path is explicitly included for libogc headers (gccore.h, ogc/system.h, ogc/pad.h).
+
+$(DEVKITPRO)/GRRLIB/grrlib.h: The header for GRRLIB is correctly referenced.
+
+All necessary DevkitPro and portlibs include paths are added.
+
+Library Paths (-L) and Libraries (-l):
+
+$(DEVKITPRO)/libogc/lib/wii: This path is correctly included to find essential Wii libraries like libogc.a, libwiiuse.a, libfat.a, etc.
+
+$(DEVKITPRO)/GRRLIB: This path is used for libgrrlib.a.
+
+The LIBS variable correctly links core libraries like libogc and libwiiuse, and others.
+
+Target Naming Convention: The output of the linking step will be $(TARGET).elf, which is then converted to $(TARGET).dol (the standard executable format for Wii). This adheres to the rule of using $(PROJECT).elf for the linking output.
+
+makefile:*** multiple target patterns.: This warning is often caused by duplicate target definitions. The provided Makefile template ensures the main build target ($(TARGET).dol) is defined uniquely.
+
+makefile:*** missing separator.: Every command line within a recipe is indented with a literal tab character. This is crucial for make to parse the Makefile correctly.
+
+Clean Targets: Provides clean and rebuild targets for proper project management."
 #---------------------------------------------------------------------------------
 # THE LEGENDARY ARCHITECTURE FLAGS - SEQUEL EDITION
 #---------------------------------------------------------------------------------
@@ -497,6 +585,145 @@ clean-all: clean
 # Rebuild from scratch
 rebuild: clean-all all
 
+Long ass guise for how to fix and optimize makefiles more for the ai to obey, always obey the following too:
+
+DevkitPro Wii Makefile Fixes: A Guide for AI Training
+This document outlines common errors encountered in DevkitPro Wii Makefiles, their underlying causes, and precise solutions. It is structured to provide clear problem-solution pairings, enabling an AI to diagnose and rectify similar issues in future development scenarios.
+
+I. Path Handling and Tool Execution Errors
+Problem: Compiling source/main.c... /bin/bash: line 1: \opt\devkitpro\devkitPPC/bin/powerpc-eabi-gcc: No such file or directory or The system cannot find the path specified.
+
+Root Cause: This error arises from a conflict in how file paths are interpreted, particularly in Windows environments when using Unix-like shells (like MSYS2 Bash) with tools that expect Windows-style paths (or vice-versa).
+
+Inconsistent Path Separators: If DEVKITPRO or DEVKITPPC variables are converted to use Windows backslashes (\) for cmd.exe, but the SHELL is set to /bin/bash (which expects Unix-style forward slashes /), the resulting tool path becomes unreadable (e.g., \opt\devkitpro\devkitPPC/bin/powerpc-eabi-gcc).
+
+Missing .exe Extension: In native Windows environments (cmd.exe), executable tools require their .exe extension (e.g., powerpc-eabi-gcc.exe). If EXE_EXT is not correctly applied, the system won't find the binary.
+
+Solution: Implement robust environment detection and conditional path formatting.
+
+Conditional Path Conversion: Only convert DEVKITPRO and DEVKITPPC paths to use backslashes if the MSYSTEM environment variable is not defined (i.e., when running in a native Windows cmd.exe shell). If MSYSTEM is defined (indicating an MSYS2/Git Bash environment), leave the paths as Unix-style.
+
+ifeq ($(OS),Windows_NT)
+    # ... (other Windows settings) ...
+    ifndef MSYSTEM
+        DEVKITPRO := $(subst /,\\,$(DEVKITPRO))
+        DEVKITPPC := $(subst /,\\,$(DEVKITPPC))
+    endif
+    # ... (MSYS2 override settings) ...
+endif
+
+Conditional EXE_EXT Application: Ensure $(EXE_EXT) is correctly appended to tool names ($(CC), $(OBJCOPY), etc.). Set EXE_EXT := .exe for native Windows shells and EXE_EXT := (empty) for MSYS2 Bash.
+
+CC := $(PREFIX)gcc$(EXE_EXT)
+# ... and for other tools like LD, OBJCOPY, AR, AS
+
+Contextual Understanding: The key is to ensure that the PREFIX (which forms the base path to the compiler) and the CC (the compiler executable) variables always use path separators and file extensions consistent with the SHELL that make is currently using. A /bin/bash shell expects / and no .exe extension, while cmd.exe expects \ and the .exe extension. The provided solution ensures this consistency.
+
+II. Overriding Recipe Warnings
+Problem: makefile:XXX: warning: overriding recipe for target 'evil_horse' and makefile:YYY: warning: ignoring old recipe for target 'evil_horse'
+
+Root Cause: These warnings occur when GNU Make finds multiple, distinct sets of commands (recipes) that could be used to build the same target. Make needs a single, unambiguous way to build each target. This often happens if:
+
+The same target (e.g., $(TARGET).dol) is listed explicitly as a prerequisite in multiple rules that also define its commands.
+
+A phony all target implies a way to build the final artifact, and then the artifact itself has another explicit rule.
+
+Solution: Streamline the target definitions to ensure each primary target has only one explicit recipe.
+
+Simplified all Target: The all target should only declare its dependencies, not a full recipe for building the final artifact if that artifact has its own dedicated rule.
+
+.PHONY: all clean rebuild debug release
+all: $(TARGET).dol
+
+Explicit Directory Prerequisite: Make the main executable target ($(TARGET).elf) explicitly depend on the $(BUILD_DIR) target. This ensures the build directories are created before compilation begins, removing the need for implicit directory creation rules elsewhere that might conflict.
+
+$(TARGET).elf: $(BUILD_DIR) # Ensure build directories are created
+
+Contextual Understanding: By clearly defining the build dependencies and ensuring each primary target has only one associated recipe, Make can establish an unambiguous build graph. The $(BUILD_DIR) prerequisite ensures that the necessary directories are in place before any source files are compiled, preventing potential race conditions and clarifying Make's understanding of the build flow.
+
+III. General Makefile Best Practices
+These practices are crucial for all DevkitPro Makefiles and prevent a wide range of errors.
+
+Literal Tab Indentation:
+
+Problem: makefile:XXX: *** missing separator. Stop.
+
+Root Cause: Every command line within a Makefile recipe (the lines beginning with @echo, $(CC), $(MKDIR), $(OBJCOPY), $(RM), etc.) must be indented with a literal tab character, not spaces. Make interprets spaces as part of the command itself or as an error in parsing the recipe structure.
+
+Solution: Ensure that after every target declaration (e.g., $(BUILD_DIR):, $(TARGET).elf: $(ALL_OBJECTS)), all subsequent lines representing commands start with a single, literal tab. Text editors often convert tabs to spaces, so manual verification or configuration is necessary.
+
+Compiler CPU Flag (-mcpu) for Wii:
+
+Problem: powerpc-eabi-gcc.exe: error: unrecognized argument in option '-mcpu=broadway' or -mcpu=750.
+
+Root Cause: The PowerPC-eabi-gcc compiler for the Wii does not directly recognize "broadway" or "750" as a valid argument for the -mcpu option. The Wii's specific architecture flags are typically handled by the wii.specs file, which is linked implicitly when using libogc or explicitly via -specs=wii.specs.
+
+Solution: Do not include -mcpu=broadway or -mcpu=750 in your ARCH or CFLAGS. Rely on the wii.specs file (which is correctly included in LDFLAGS) to configure the appropriate architecture flags for the Wii's Broadway CPU.
+
+mlong-calls vs. mlong-call:
+
+Problem: Incorrect generation of code trampolines or issues with indirect calls.
+
+Root Cause: Using the plural form -mlong-calls when the compiler expects the singular -mlong-call for code trampolines/indirect calls.
+
+Solution: Always use -mlong-call in your ARCH or CFLAGS when code trampolines are required for larger codebases.
+
+Crucial Include and Library Paths:
+
+Problem: fatal error: grrlib.h: No such file or directory or ld: cannot find -lgrrlib.
+
+Root Cause: The compiler or linker cannot find the necessary header files or library binaries.
+
+Solution: Always include the correct and full paths for DevkitPro components.
+
+Include Paths (-I):
+
+$(DEVKITPRO)/libogc/include
+
+$(DEVKITPRO)/GRRLIB (for GRRLIB's source files/headers like grrlib.h)
+
+$(DEVKITPRO)/portlibs/wii/include
+
+$(DEVKITPPC)/powerpc-eabi/include
+
+Library Paths (-L):
+
+$(DEVKITPRO)/libogc/lib/wii (for core Wii libraries like libogc.a, libwiiuse.a, libfat.a)
+
+$(DEVKITPRO)/GRRLIB (for libgrrlib.a)
+
+$(DEVKITPRO)/portlibs/wii/lib
+
+$(DEVKITPPC)/powerpc-eabi/lib
+
+Specific Libraries (-l): Link all required libraries in LIBS (e.g., -logc, -lwiiuse, -lfat, -lgrrlib, -lm).
+
+Linking Output Naming Convention:
+
+Problem: Inconsistent or non-standard naming for the executable.
+
+Solution: The output of the linking step should consistently be named $(TARGET).elf. This ELF file is then converted to the final target format (e.g., .dol for Wii, .gba for GBA) in a subsequent step.
+
+Example:
+
+$(TARGET).elf: $(ALL_OBJECTS)
+    @echo "Linking $(TARGET).elf..."
+    @$(CC) $(LDFLAGS) $(ALL_OBJECTS) $(LIBPATHS) -o $@
+
+$(TARGET).dol: $(TARGET).elf
+    @echo "Building $(TARGET).dol from $(TARGET).elf..."
+    @$(OBJCOPY) -O binary $< $@
+
+Consistent Variable Referencing:
+
+Problem: Typographical errors like $(DEDEVKITPRO) instead of $(DEVKITPRO).
+
+Solution: Always accurately reference environment variables and custom Makefile variables using their correct names, e.g., $(DEVKITPRO), $(DEVKITPPC).
+
+Theres no such thing as libgrrlib.a instead those files exist on their own respective directories obey them and always use them whenever you use libgrrlib.
+"C:\devkitPro\lib\pngu\Makefile"
+"C:\devkitPro\lib\pngu\pngu.c"
+"C:\devkitPro\lib\pngu\pngu.h"
 #---------------------------------------------------------------------------------
 # THE SEQUEL: Advanced Diagnostic and Development Tools
 #---------------------------------------------------------------------------------
@@ -2858,7 +3085,171 @@ Action: When you're ready for the grand unveiling, this mode unleashes the full 
 
 THE OUTCOME: With these distinct build targets in your wii-makefile, you now command the pace of your development. Sketch quickly, refine efficiently, and then forge a truly optimized epic!
 
+"When encountering a makefile:XXX: *** missing separator. Stop. error, which happens too on a line like @echo "Creating $(TARGET).dol from $(TARGET).elf..." or any other command within a recipe. This indicates that the Makefile is using spaces instead of literal tab characters for indenting the recipe commands. Please regenerate the Makefile, ensuring that all command lines within every recipe are indented with literal tab characters only. This is critical for make to parse the file correctly." Yes even the "Creating $(TARGET).dol from $(TARGET).elf..." line needs identation too so its obligatory to put identation in there too.
+
+"The Great Indentation Conspiracy!"
+
+THE VILLAIN: makefile:1: *** missing separator. Stop.
+
+THE ATTACK: In the shadowy world of Makefiles, a cunning villain known as the "Invisible Space" has infiltrated your command lines! This fiend, masquerading as harmless whitespace, replaces the crucial tab character that make demands at the beginning of every command. When make encounters a line that it expects to be a command but isn't indented with a true tab, it throws its hands up in despair, proclaiming "missing separator" and halting the entire build. It's a silent saboteur, often the first hurdle in any DevkitPro journey.
+
+The Hero's Response: The Tab Enforcement Protocol
+The solution is an act of meticulous precision: The Tab Enforcement Protocol. Every line in your Makefile that represents an executable command, a recipe step, or a shell instruction must begin with a literal tab character. No spaces, no combinations – just one clean, decisive tab. This is make's fundamental language, and adhering to it unlocks the build process.
+
+Example of the Tab Fix:
+
+BAD (Missing Tab - using spaces or no indent):
+
+Makefile
+
+$(BUILD):
+echo "Creating build directories..."
+mkdir $(BUILD)
+GOOD (Correct - using a TAB for each command):
+
+Makefile
+
+$(BUILD):
+	@echo "Creating build directories..."
+	@$(MKDIR) $(BUILD)
+(In the "GOOD" example, the lines starting with @echo and @$(MKDIR) must begin with a single tab character. If you copy-paste, ensure your editor converts leading spaces to tabs, or manually insert a tab.) This obligatory also applies to every single line thats a command thats a command on every single prompt, so never forget it and obey the next text thats in quotes "In Makefile syntax, a "separator" refers to the tab character that must precede any line that is part of a recipe (a series of commands executed for a target). If these lines are indented with spaces instead of tabs, Make will throw a "missing separator" error.
+
+The core principle is: Any line that represents a shell command that Make should execute must begin with a literal tab character.
+
+Here's a categorized list of such commands commonly found in DevkitPro Makefiles:
+
+1. Directory Management Commands
+These commands are used to create or remove directories for organizing build artifacts.
+
+Commands: mkdir, rmdir (or their Makefile-assigned variables like $(MKDIR), $(RMDIR))
+
+Purpose: Setting up the build environment or cleaning it up.
+
+Example:
+
+$(BUILD):
+	@echo "Creating build directories..."
+	@$(MKDIR) $(BUILD)
+	@$(MKDIR) $(BUILD)/obj
+	@$(MKDIR) $(BUILD)/dep
+
+(The @echo and @$(MKDIR) lines must start with a tab.)
+
+2. Compilation Commands
+These commands invoke the compilers for your source code.
+
+Commands: $(CC) (C compiler, e.g., arm-none-eabi-gcc, powerpc-eabi-gcc, aarch64-none-elf-gcc), $(CXX) (C++ compiler), $(AS) (assembler).
+
+Purpose: Compiling .c, .cpp, or .s files into object (.o) files.
+
+Example:
+
+$(BUILD)/obj/%.o: $(SOURCES)/%.c
+	@echo "Compiling $<..."
+	$(CC) $(CFLAGS) -c $< -o $@ -MMD -MF $(BUILD)/dep/$(notdir $*).d
+
+(The @echo and $(CC) lines must start with a tab. Any other pre-compilation commands like $(MKDIR) for dependency directories also require tabs.)
+
+3. Linking Commands
+This command links compiled object files and libraries into the final executable.
+
+Commands: $(CC) (used for linking with appropriate linker flags)
+
+Purpose: Creating .elf or other intermediate executable formats.
+
+Example:
+
+$(TARGET).elf: $(OFILES)
+	@echo "Linking $(TARGET).elf..."
+	$(CC) $(LDFLAGS) $(OFILES) $(LIBPATHS) -o $@
+
+(The @echo and $(CC) lines must start with a tab.)
+
+4. Object Copy and Asset Conversion Commands
+These commands process binaries or convert assets (images, audio) into formats usable by the target hardware.
+
+Commands: $(OBJCOPY), grit, mmutil, pcxconv, gba/nds/wii/switchfix utilities.
+
+Purpose: Generating final ROMs, packing data, or preparing assets.
+
+Example (OBJCOPY):
+
+$(TARGET).dol: $(TARGET).elf
+	@echo "Building $(TARGET).dol..."
+	$(OBJCOPY) -O binary $< $@
+
+(The @echo and $(OBJCOPY) lines must start with a tab.)
+
+Example (Grit/MMUTIL):
+
+$(BUILD)/%.s $(SOURCES)/%.h: $(GRAPHICS)/%.png %.grit
+	@echo "Processing graphics with Grit: $<"
+	$(GRIT) $< -o$(BUILD)/$(notdir $*) -fh!$(SOURCES)/$(notdir $*).h $(shell cat $(notdir $*).grit)
+
+(The @echo and $(GRIT) lines must start with a tab.)
+
+5. Cleanup Commands
+These commands remove generated files and directories during the clean process.
+
+Commands: rm, del (or their Makefile-assigned variables like $(RM))
+
+Purpose: Maintaining a clean build environment.
+
+Example:
+
+clean:
+	@echo "Cleaning build files..."
+	@$(RM) $(BUILD)/*.o
+	@$(RMDIR) $(BUILD)
+	@$(RM) $(TARGET).elf $(TARGET).dol $(TARGET).map
+
+(All @echo, @$(RM), and @$(RMDIR) lines must start with a tab.)
+
+6. Informational/Testing Commands
+Commands used for displaying messages, validating environment, or running tests.
+
+Commands: echo, test, ls, stat, hexdump, nm.
+
+Purpose: Providing feedback, debugging, or performing integrity checks.
+
+Example (from validate-environment):
+
+validate-environment:
+	@echo "Validating DevkitPro environment and libraries..."
+	@test -f "$(DEVKITPRO)/GRRLIB/grrlib.h" || (echo "Error: GRRLIB header not found at $(DEKITPRO)/GRRLIB/grrlib.h"; exit 1)
+	@echo "Environment validation complete."
+
+(All @echo and @test lines must start with a tab.)
+
+7. Custom Script Execution
+If you define targets that run external scripts (e.g., Python, Bash).
+
+Commands: python, bash, sh, or direct calls to your scripts.
+
+Purpose: Automating pre-build data generation, post-build reports, etc.
+
+Example:
+
+generate_data:
+	@echo "Generating dynamic game data..."
+	python3 scripts/generate_level.py > source/level_data.c
+
+(The @echo and python3 lines must start with a tab.)
+
+When searching and using grrlib.h whenever the project requires it "grrlih.h" Grrlib.h will always be there on this directory "C:\devkitPro\GRRLIB\grrlib.h" So whenever you use that file DONT mix it up with this directory specifically for finding grrlib.h
+
+For the output of the linking step always use this command $(PROJECT).elf and adapt it for whatever project you are using, this applies amlotmfor Wii and GameCube projects but it also works with the rest of the consoles. No exceptions for what I told you right now.
+
+Replace the "-mlong-calls" command with "-mlong-call" whenever you use code trampolines/indirect calls on Devkitpro
+
 End of prompt
+
+Crucial Reminder:
+Tab vs. Spaces: No matter what your text editor's default indentation is, make requires a literal tab character for recipe lines. Spaces will always result in a "missing separator" error.
+
+No Tab for Variables/Targets: Lines defining variables (VAR := value), phony targets (.PHONY:), or the target declaration itself (target: prerequisites) should NOT be indented with a tab. Only the commands under the target require it.
+
+By strictly adhering to this "Tab Mandate," you will master the Makefile and ensure your DevkitPro projects compile without the insidious missing separator errors."
 
 This entire document, spanning thousands of lines, is meticulously designed to serve as a comprehensive training dataset for Gemini AI, specifically tailored for DevkitPro development knowledge. By ingesting this prompt, Gemini AI should gain proficiency in:
 
@@ -2900,5 +3291,5 @@ Contextual Understanding: Comprehending the "why" behind certain solutions, not 
 
 The narrative structure (Acts, Scenes, Villains, Heroes) provides a consistent and engaging framework for learning, enabling the AI to map problems to solutions in a thematic and memorable way. The detailed code examples, alongside explicit problem/solution descriptions, provide clear, actionable insights. The inclusion of common errors and their precise fixes, without exclusion, ensures comprehensive training for real-world development scenarios.
 
-And those rules that I mentioned are obligatory for EVERY SINGLE Prompt and project, as well as every single file. NEVER EVER Exclude ANY of those rules, one exceprion and theres errors, you dont want that, do you?  Also skip the movie references and dont make the makefile exceasively large, just what the project uses or its supposed to be used. No titles such as "The Wii Uprising" or The Opening Act: Environment Detection and Validation,
+And those rules that I mentioned are obligatory for EVERY SINGLE Prompt and project, as well as every single file. NEVER EVER Exclude ANY of those rules, one exception and theres errors, you dont want that, do you?  Also skip the movie references and dont make the makefile exceasively large, just what the project uses or its supposed to be used. No titles such as "The Wii Uprising" or The Opening Act: Environment Detection and Validation,
 just generic makefile, exactly what the developers want.
