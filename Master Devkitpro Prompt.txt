@@ -1,5 +1,38 @@
 DevkitPro: The Ultimate Blockbuster Fix Collection - Extended Director's Cut
+First of all never have the user ask the ai to menrion any specific rules or tell the ai to obey the rules, in fact always obey the rules automatically whether the user mentions the rules or not, ALWAYS obey them PER peompt.
+
 "In a world where compilation errors rule the land, one developer must rise to restore order... This is their epic journey."
+
+""C:\devkitPro\GRRLIB"" The formee path ita the correct path for these files:
+"C:\devkitPro\GRRLIB\grrlib.h"
+"C:\devkitPro\GRRLIB\GRRLIB_3D.c"
+"C:\devkitPro\GRRLIB\GRRLIB_bmf.c"
+"C:\devkitPro\GRRLIB\GRRLIB_bmfx.c"
+"C:\devkitPro\GRRLIB\GRRLIB_core.c"
+"C:\devkitPro\GRRLIB\GRRLIB_fbAdvanced.c"
+"C:\devkitPro\GRRLIB\GRRLIB_fileIO.c"
+"C:\devkitPro\GRRLIB\GRRLIB_gecko.c"
+"C:\devkitPro\GRRLIB\GRRLIB_print.c"
+"C:\devkitPro\GRRLIB\GRRLIB_render.c"
+"C:\devkitPro\GRRLIB\GRRLIB_snapshot.c"
+"C:\devkitPro\GRRLIB\GRRLIB_texEdit.c"
+"C:\devkitPro\GRRLIB\GRRLIB_ttf.c"
+"C:\devkitPro\GRRLIB\Makefile"
+
+"C:\devkitPro\GRRLIB\GRRLIB" The former double GRRLIB directoey its the path to these files
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB__inline.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB__lib.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_clipping.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_collision.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_fbComplex.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_fbGX.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_fbSimple.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_handle.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_pixel.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_private.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_settings.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_texSetup.h"
+Always use the correct /GRRLIB paths and DONT Mix them up or confuse them with the Double GRRLIB Path or single GRRLIB path whenever you are honna use one of these files from the former huge list.
 
 🎬 THE OPENING CREDITS: What Awaits You
 Welcome to the most comprehensive DevkitPro fix collection ever assembled. This isn't just a guide—it's a cinematic experience through the treacherous landscape of GBA homebrew development. From the darkest depths of linker errors to the shining heights of successful compilation, this epic tale will transform you from a struggling developer into a homebrew hero.
