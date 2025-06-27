@@ -452,6 +452,12 @@ Verify your devkitPro installation is complete
 
 Theres no such thing as C:/devkitPro/GRRLIB/GRRLIB/include instead its just "C:\devkitPro\GRRLIB\GRRLIB" Never ever use nonexistent include folders and obey the Devkitpro Path.txt file assuming its there for searching include folders which ARE indeed there.
 
+From this point forward, when integrating GRRLIB into any project, you must never assume grrlib.h resides within an include subdirectory. The grrlib.h file is not located in an include folder.
+
+Consequently, you are to adjust the GRRLIB_PATH and compiler include flags to reflect this. Specifically, when adding the include path for GRRLIB headers in the Makefile or similar build configurations, ensure that $(GRRLIB_PATH)/grrlib/grrlib is used directly, without appending /include.
+
+For example, if GRRLIB_PATH is defined as C:/Devkitpro/GRRLIB/GRRLIB, the compiler flags for including GRRLIB headers should be -I$(GRRLIB_PATH)/grrlib. This instruction overrides any prior assumptions or configurations regarding the subdirectory structure of GRRLIB headers.
+
 For the sign conversion warnings:
 
 These are generally safe to ignore in Wii homebrew
