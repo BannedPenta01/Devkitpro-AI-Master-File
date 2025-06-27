@@ -7,7 +7,7 @@ C:\devkitPro\devkitARM\
 C:\devkitPro\devkitPPC\
 C:\devkitPro\docs\
 C:\devkitPro\examples\
-C:\devkitPro\GRRLIB\
+C:\devkitPro\GRRLIB\GRRLIB
 C:\devkitPro\libctru\
 C:\devkitPro\libgba\
 C:\devkitPro\libmirko\
@@ -7341,7 +7341,7 @@ C:\devkitPro\GRRLIB\GRRLIB\
 C:\devkitPro\GRRLIB\lib\
 C:\devkitPro\GRRLIB\Makefile
 C:\devkitPro\GRRLIB\GRRLIB\grrlib\
-C:\devkitPro\GRRLIB\GRRLIB\grrlib.h
+C:\devkitPro\GRRLIB\GRRLIB\
 C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_3D.c
 C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_bmf.c
 C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_bmfx.c
