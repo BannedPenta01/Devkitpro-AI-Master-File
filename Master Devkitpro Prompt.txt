@@ -450,6 +450,8 @@ Ensure you're compiling with -DGEKKO flag
 
 Verify your devkitPro installation is complete
 
+Theres no such thing as C:/devkitPro/GRRLIB/GRRLIB/include instead its just "C:\devkitPro\GRRLIB\GRRLIB" Never ever use nonexistent include folders and obey the Devkitpro Path.txt file assuming its there for searching include folders which ARE indeed there.
+
 For the sign conversion warnings:
 
 These are generally safe to ignore in Wii homebrew
