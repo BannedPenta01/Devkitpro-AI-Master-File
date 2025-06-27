@@ -75,7 +75,7 @@ THE VILLAIN: error: expected identifier or '(' before '[' token
 This is where most heroes fall. The citation markup that haunts your source code like a ghost from documentation past.
 
 
-"C:\devkitPro\GRRLIB\grrlib.h" You see this path?  Thats where grrlib.h ALWAYS, ALWAYS its gonna be.  No exceptions, neither never use this path for finding grrlib.h EVER "/opt/devkitpro/libgrrlib/include"
+"C:\devkitPro\GRRLIB\GRRLIB\grrlib.h" You see this path?  Thats where grrlib.h ALWAYS, ALWAYS its gonna be.  No exceptions, neither never use this path for finding grrlib.h EVER "/opt/devkitpro/libgrrlib/include"
 C
 
 // THE VILLAIN'S ATTACK:
@@ -547,7 +547,7 @@ Error: 'GRRLIB_Font' undeclared
 
 Cause: The GRRLIB_Font variable, representing the default font texture, is defined within grrlib.h (or related GRRLIB internal headers). This error usually means the compiler either cannot find grrlib.h correctly or is not processing it fully due to other issues.
 
-Fix: The Makefile already includes I"$(DEVKITPRO_WIN)/GRRLIB", which should allow grrlib.h to be found. Ensure this path is correct on your system. If the issue persists, verify your DevkitPro installation path is correct and accessible.
+Fix: The Makefile already includes I"$(DEVKITPRO_WIN)/GRRLIB/GRRLIB", which should allow grrlib.h to be found. Ensure this path is correct on your system. If the issue persists, verify your DevkitPro installation path is correct and accessible.
 
 Error: called object is not a function or function pointer (for SYS_RETURNTOMENU())
 
@@ -573,7 +573,7 @@ Fix: These are typically safe to ignore as they are in library code you are incl
 
 $(DEVKITPRO)/libogc/include: This crucial path is explicitly included for libogc headers (gccore.h, ogc/system.h, ogc/pad.h).
 
-$(DEVKITPRO)/GRRLIB/grrlib.h: The header for GRRLIB is correctly referenced.
+$(DEVKITPRO)/GRRLIB/GRRLIB/grrlib.h: The header for GRRLIB is correctly referenced.
 
 All necessary DevkitPro and portlibs include paths are added.
 
@@ -581,8 +581,11 @@ Library Paths (-L) and Libraries (-l):
 
 $(DEVKITPRO)/libogc/lib/wii: This path is correctly included to find essential Wii libraries like libogc.a, libwiiuse.a, libfat.a, etc.
 
-$(DEVKITPRO)/GRRLIB: This path is used for libgrrlib.a.
-
+The following are used for these files 
+"C:\devkitPro\GRRLIB\lib\pngu\Makefile"
+"C:\devkitPro\GRRLIB\lib\pngu\pngu.c"
+"C:\devkitPro\GRRLIB\lib\pngu\pngu.h"
+ALWAYS, but ALWAYS use these instead of libgrrlib.a because this file doesnt exist.
 The LIBS variable correctly links core libraries like libogc and libwiiuse, and others.
 
 Target Naming Convention: The output of the linking step will be $(TARGET).elf, which is then converted to $(TARGET).dol (the standard executable format for Wii). This adheres to the rule of using $(PROJECT).elf for the linking output.
@@ -968,7 +971,7 @@ Include Paths (-I):
 
 $(DEVKITPRO)/libogc/include
 
-$(DEVKITPRO)/GRRLIB (for GRRLIB's source files/headers like grrlib.h)
+$(DEVKITPRO)/GRRLIB/GRRLIB (for GRRLIB's source files/headers like grrlib.h)
 
 $(DEVKITPRO)/portlibs/wii/include
 
@@ -978,9 +981,10 @@ Library Paths (-L):
 
 $(DEVKITPRO)/libogc/lib/wii (for core Wii libraries like libogc.a, libwiiuse.a, libfat.a)
 
-$(DEVKITPRO)/GRRLIB (for libgrrlib.a)
-
-$(DEVKITPRO)/portlibs/wii/lib
+Again, use these instead of libgrrlib.a because theres no such thing as libgrrlib.a$$(DEVKITPRO)/portlibs/wii/lib
+"C:\devkitPro\GRRLIB\lib\pngu\Makefile"
+"C:\devkitPro\GRRLIB\lib\pngu\pngu.c"
+"C:\devkitPro\GRRLIB\lib\pngu\pngu.h"
 
 $(DEVKITPPC)/powerpc-eabi/lib
 
@@ -3122,7 +3126,7 @@ The compiler stands defiant, uttering a fatal error: grrlib.h: No such file or d
 Do you see this error?
 "$ make
 Compiling source/main.c...
-/opt/devkitpro/devkitPPC/bin/powerpc-eabi-gcc -g -Wall -O3 -mcpu=broadway -D_WII -I/c/users/janmi/downloads/dev/wii/source -I"/opt/devkitpro/libogc/include" -I"/opt/devkitpro/GRRLIB" -I"/opt/devkitpro/portlibs/wii/include" -I"/opt/devkitpro/devkitPPC/powerpc-eabi/include" -c source/main.c -o build/obj/main.o -MMD -MF build/dep/main.d
+/opt/devkitpro/devkitPPC/bin/powerpc-eabi-gcc -g -Wall -O3 -mcpu=broadway -D_WII -I/c/users/janmi/downloads/dev/wii/source -I"/opt/devkitpro/libogc/include" -I"/opt/devkitpro/GRRLIB/GRRLIB" -I"/opt/devkitpro/portlibs/wii/include" -I"/opt/devkitpro/devkitPPC/powerpc-eabi/include" -c source/main.c -o build/obj/main.o -MMD -MF build/dep/main.d
 powerpc-eabi-gcc.exe: error: unrecognized argument in option '-mcpu=broadway'
 powerpc-eabi-gcc.exe: note: valid arguments to '-mcpu=' are: 401 403 405 405fp 440 440fp 464 464fp 476 476fp 505 601 602 603 603e 604 604e 620 630 740 7400 7450 750 801 821 823 8540 8548 860 970 G3 G4 G5 a2 cell e300c2 e300c3 e500mc e500mc64 e5500 e6500 ec603e native power10 power11 power3 power4 power5 power5+ power6 power6x power7 power8 power9 powerpc powerpc64 powerpc64le rs64 titan
 make: *** [makefile:145: build/obj/main.o] Error 1" It happens because theres no such flag as -mcpu=broadway PowerPC-eabi-gcc doesnt directly accept "broadway" as a CPU argument so NEVER implement -mcpu=broadway!
@@ -3182,20 +3186,21 @@ $ make
 makefile:220: *** multiple target patterns.  Stop."
 
 Grrlib its located there, always use these paths:"C:\devkitPro\GRRLIB\GRRLIB"
-"C:\devkitPro\GRRLIB\grrlib.h"
-"C:\devkitPro\GRRLIB\GRRLIB_3D.c"
-"C:\devkitPro\GRRLIB\GRRLIB_bmf.c"
-"C:\devkitPro\GRRLIB\GRRLIB_bmfx.c"
-"C:\devkitPro\GRRLIB\GRRLIB_core.c"
-"C:\devkitPro\GRRLIB\GRRLIB_fbAdvanced.c"
-"C:\devkitPro\GRRLIB\GRRLIB_fileIO.c"
-"C:\devkitPro\GRRLIB\GRRLIB_gecko.c"
-"C:\devkitPro\GRRLIB\GRRLIB_print.c"
-"C:\devkitPro\GRRLIB\GRRLIB_render.c"
-"C:\devkitPro\GRRLIB\GRRLIB_snapshot.c"
-"C:\devkitPro\GRRLIB\GRRLIB_texEdit.c"
-"C:\devkitPro\GRRLIB\GRRLIB_ttf.c"
-"C:\devkitPro\GRRLIB\Makefile"
+"C:\devkitPro\GRRLIB\GRRLIB\grrlib"
+"C:\devkitPro\GRRLIB\GRRLIB\grrlib.h"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_3D.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_bmf.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_bmfx.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_core.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_fbAdvanced.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_fileIO.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_gecko.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_print.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_render.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_snapshot.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_texEdit.c"
+"C:\devkitPro\GRRLIB\GRRLIB\GRRLIB_ttf.c"
+"C:\devkitPro\GRRLIB\GRRLIB\Makefile"
 
 Folder of libogc, always use it, enough said "C:\devkitPro\libogc\include"
 
@@ -3504,7 +3509,7 @@ Example (from validate-environment):
 
 validate-environment:
 	@echo "Validating DevkitPro environment and libraries..."
-	@test -f "$(DEVKITPRO)/GRRLIB/grrlib.h" || (echo "Error: GRRLIB header not found at $(DEKITPRO)/GRRLIB/grrlib.h"; exit 1)
+	@test -f "$(DEVKITPRO)/GRRLIB/GRRLIB/grrlib.h" || (echo "Error: GRRLIB header not found at $(DEKITPRO)/GRRLIB/grrlib.h"; exit 1)
 	@echo "Environment validation complete."
 
 (All @echo and @test lines must start with a tab.)
@@ -3524,7 +3529,7 @@ generate_data:
 
 (The @echo and python3 lines must start with a tab.)
 
-When searching and using grrlib.h whenever the project requires it "grrlih.h" Grrlib.h will always be there on this directory "C:\devkitPro\GRRLIB\grrlib.h" So whenever you use that file DONT mix it up with this directory specifically for finding grrlib.h
+When searching and using grrlib.h whenever the project requires it "grrlih.h" Grrlib.h will always be there on this directory "C:\devkitPro\GRRLIB\GRRLIB\grrlib.h" So whenever you use that file DONT mix it up with this directory specifically for finding grrlib.h
 
 For the output of the linking step always use this command $(PROJECT).elf and adapt it for whatever project you are using, this applies amlotmfor Wii and GameCube projects but it also works with the rest of the consoles. No exceptions for what I told you right now.
 
