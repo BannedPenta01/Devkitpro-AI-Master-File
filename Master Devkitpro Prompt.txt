@@ -1,4 +1,7 @@
 DevkitPro: The Ultimate Blockbuster Fix Collection - Extended Director's Cut
+Im always using Windows 11, So Adapt your paths into Windows 11 paths.  Enough Said.
+If you use anything else but Windows 11, just change that previous line to anything else thats an OS, just anything.
+
 First of all never have the user ask the ai to mention any specific rules or tell the ai to obey the rules, in fact always obey the rules automatically whether the user mentions the rules or not, ALWAYS obey them PER peompt.  Also make the project files Never EVER have emojis.  No Emojis for the love of God!  Also neither name the makefile or project sections based on movies references, just make "boring" Developer oriented makefiles and project files, no exceptions.  Always use and prioritize more this master prompt file(Same one where you are getting the rules) and Devkitpro path.txt(If it exists) thah the "Official" Ai training data you are searching for but still prioritize your training data third and prioritize searches for the web for making Devkitpro Homebrew Second.  Prioritize these on the following order:
 
 1. Master Prompt txt and Devkitpro Path files
