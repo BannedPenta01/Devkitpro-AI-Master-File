@@ -16,9 +16,178 @@ Always use -mrvl ALWAYS instead of mcpu=broadway no exceptions.
 
 By the love of God, review all path definitions in the makefile, specifically DEVKITPRO, DEVKITPPC, LIBOGC_PATH, and GRRLIB_PATH. Ensure that there are NO unintended spaces at the end of these paths or anywhere within the path string. For example, change DEVKITPRO ?= C:/devkitPro  to DEVKITPRO ?= C:/devkitPro if there is a trailing space, just do it.
 
+"janmi@Jan MSYS /c/users/janmi/downloads/dev/wii
+$ make
+CC Main.c
+Main.c:2:10: error: '#include' expects '"FILENAME"' or '<FILENAME>'
+    2 | #include
+      |          ^
+Main.c:4:10: error: '#include' expects '"FILENAME"' or '<FILENAME>'
+    4 | #include
+      |          ^
+Main.c:6:10: error: '#include' expects '"FILENAME"' or '<FILENAME>'
+    6 | #include
+      |          ^
+Main.c: In function 'main':
+Main.c:10:1: error: implicit declaration of function 'GRRLIB_Init' [-Wimplicit-function-declaration]
+   10 | GRRLIB_Init();
+      | ^~~~~~~~~~~
+Main.c:15:5: error: implicit declaration of function 'GRRLIB_FillScreen' [-Wimplicit-function-declaration]
+   15 |     GRRLIB_FillScreen(0x000000FF);
+      |     ^~~~~~~~~~~~~~~~~
+Main.c:18:5: error: implicit declaration of function 'GRRLIB_SetGXRMode' [-Wimplicit-function-declaration]
+   18 |     GRRLIB_SetGXRMode(GRRLIB_VideoMode); // Ensure GX is in 2D mode for text
+      |     ^~~~~~~~~~~~~~~~~
+Main.c:18:23: error: 'GRRLIB_VideoMode' undeclared (first use in this function)
+   18 |     GRRLIB_SetGXRMode(GRRLIB_VideoMode); // Ensure GX is in 2D mode for text
+      |                       ^~~~~~~~~~~~~~~~
+Main.c:18:23: note: each undeclared identifier is reported only once for each function it appears in
+Main.c:19:5: error: implicit declaration of function 'GRRLIB_Printf' [-Wimplicit-function-declaration]
+   19 |     GRRLIB_Printf(100, 200, GRRLIB_LoadTexture(NULL), 0x00FF00FF, 2.0, "Evil and Intimidating Horse"); // Green color ARGB, font size 2.0
+      |     ^~~~~~~~~~~~~
+Main.c:19:29: error: implicit declaration of function 'GRRLIB_LoadTexture' [-Wimplicit-function-declaration]
+   19 |     GRRLIB_Printf(100, 200, GRRLIB_LoadTexture(NULL), 0x00FF00FF, 2.0, "Evil and Intimidating Horse"); // Green color ARGB, font size 2.0
+      |                             ^~~~~~~~~~~~~~~~~~
+Main.c:19:48: error: 'NULL' undeclared (first use in this function)
+   19 |     GRRLIB_Printf(100, 200, GRRLIB_LoadTexture(NULL), 0x00FF00FF, 2.0, "Evil and Intimidating Horse"); // Green color ARGB, font size 2.0
+      |                                                ^~~~
+Main.c:1:1: note: 'NULL' is defined in header '<stddef.h>'; this is probably fixable by adding '#include <stddef.h>'
+  +++ |+#include <stddef.h>
+    1 | // main.c
+Main.c:22:5: error: implicit declaration of function 'GRRLIB_Render' [-Wimplicit-function-declaration]
+   22 |     GRRLIB_Render();
+      |     ^~~~~~~~~~~~~
+make: *** [makefile:54: build/Main.o] Error 1"
+Those quoted former errors, yeah listen to their prebuilt fixes and avoid the errors always.
+
+Explanation of Fixes and Makefile:
+Main.c Fixes:
+
+Missing Includes:
+
+#include <grrlib.h>: This is essential for all GRRLIB functions. The original Main.c had empty #include directives, leading to the "expects FILENAME" errors.
+
+#include <ogc/gx.h>: GRRLIB_VideoMode is part of the ogc/gx.h header, which is fundamental for graphics operations on the Wii.
+
+#include <malloc.h>: memalign (while not directly used in the snippet, good practice for texture allocation in GRRLIB) is in malloc.h.
+
+#include <wiiuse/wiiuse.h>: Although not used in the provided snippet, wiiuse is a common library for Wii remote interaction, so it's often included in Wii projects.
+
+#include <stddef.h>: This header defines NULL, which was causing an "undeclared" error.
+
+GRRLIB_Exit(): Added GRRLIB_Exit(); at the end of main to properly free GRRLIB resources when the program exits.
+
+Makefile Fixes and Structure:
+
+
+Windows Paths: All paths are explicitly defined in Windows format (e.g., C:/devkitPro) as per the Master Devkitpro Prompt.txt.
+
+DEVKITPRO and DEVKITPPC: Defined DEVKITPRO as the base DevkitPro installation directory and DEVKITPPC for the PowerPC toolchain used for Wii development.
+
+INCLUDE_PATHS:
+
+GRRLIB headers are now correctly included. The rule from 
+
+Master Devkitpro Prompt.txt stating "never explicitly add -I flags or similar include path directives for GRRLIB headers in CFLAGS. Assume GRRLIB_PATH is correctly defined and its 'include' subdirectory is implicitly covered by the build system or user's environment if GRRLIB is used. Only reference GRRLIB_PATH itself, not its subdirectories in include paths"  has been followed. Instead of 
+
+-I$(DEVKPRO)/GRRLIB/GRRLIB/include, I've structured it to include the GRRLIB base include and also specifically ogc/gx.h path.
+
+libogc include path is added for standard Wii development headers.
+
+The 
+
+Master Devkitpro Prompt.txt mentioned a previous typo fix from -I$(DEVKPRO)/GRRLIB/GRRLIB to -I$(DEVKITPRO)/GRRLIB/GRRLIB. This has been considered.
+
+LIBS:
+
+-lgrrlib: Links the GRRLIB library.
+
+-lwiiuse: Links the wiiuse library.
+
+-lbte: A common dependency for wiiuse and other network-related functions.
+
+-logc: Links the libogc library, essential for Wii development.
+
+-lm: Links the math library, often needed for various calculations.
+
+LDFLAGS:
+
+-specs=wii.specs: Specifies the Wii linking specifications provided by DevkitPro.
+
+-Wl,-gc-sections: Removes unused sections from the output executable, reducing its size.
+
+-L$(DEVKITPPC)/libogc/lib/wii: Specifies the library path for libogc.
+
+-L$(DEVKITPRO)/GRRLIB/GRRLIB/lib/wii: Specifies the library path for GRRLIB.
+
+Build Process:
+
+all: The default target that builds the .dol file.
+
+$(BUILDDIR): Creates a build directory for object files.
+
+Compilation rule for .c files into .o object files.
+
+Linking rule for .o files into a .elf executable.
+
+objcopy rule to convert the .elf into the final .dol format for the Wii.
+
+clean target: A rule to remove generated build files.
+
+
+Tool Definitions: Explicitly defines CC, AR, and OBJCOPY using their full paths within the devkitPPC toolchain to avoid any ambiguity, as indicated in Devkitpro Paths.txt to "make your commands use all of these prompts and make the commands limit themselves around the commands".
+
+This setup should correctly compile the Main.c file and produce a Wii-compatible .dol executable.
+
+
 "In a world where compilation errors rule the land, one developer must rise to restore order... This is their epic journey."
 
-Global Directories that you should always make and put files into whenever you are making a project file and check imported peoject files to see what kind of asset in the imported file too thats uploaded to the ai model:
+Never ever use cc or CC for compiling instead use these for Wii/GC "C:\devkitPro\devkitPPC\bin\powerpc-eabi-gcc.exe" this for GBA/DS/3DS/GP32 "C:\devkitPro\devkitARM\bin\arm-none-eabi-gcc.exe" and this for Switch "C:\devkitPro\devkitA64\bin\aarch64-none-elf-gcc.exe" Always obey the former direcrories.
+
+Global Directories that you should always make and put files into whenever you are making a project file and check imported peoject files to see what kind of asset in the imported file too thats uploaded to the ai model Also always put Main.c and other Source files on the source folder:
+
+$ make
+C:/devkitPro/devkitPPC/bin/powerpc-eabi-gcc -c Main.c -Wall -Wextra -DGEKKO -IC:/devkitPro/libogc/include -IC:/devkitPro/GRRLIB/GRRLIB/include -O2 -o Main.o
+Main.c:2:10: error: '#include' expects '"FILENAME"' or '<FILENAME>'
+    2 | #include
+      |          ^
+Main.c:4:10: error: '#include' expects '"FILENAME"' or '<FILENAME>'
+    4 | #include
+      |          ^
+Main.c:6:10: error: '#include' expects '"FILENAME"' or '<FILENAME>'
+    6 | #include
+      |          ^
+Main.c: In function 'main':
+Main.c:10:1: error: implicit declaration of function 'GRRLIB_Init' [-Wimplicit-function-declaration]
+   10 | GRRLIB_Init();
+      | ^~~~~~~~~~~
+Main.c:15:5: error: implicit declaration of function 'GRRLIB_FillScreen' [-Wimplicit-function-declaration]
+   15 |     GRRLIB_FillScreen(0x000000FF);
+      |     ^~~~~~~~~~~~~~~~~
+Main.c:18:5: error: implicit declaration of function 'GRRLIB_SetGXRMode' [-Wimplicit-function-declaration]
+   18 |     GRRLIB_SetGXRMode(GRRLIB_VideoMode); // Ensure GX is in 2D mode for text
+      |     ^~~~~~~~~~~~~~~~~
+Main.c:18:23: error: 'GRRLIB_VideoMode' undeclared (first use in this function)
+   18 |     GRRLIB_SetGXRMode(GRRLIB_VideoMode); // Ensure GX is in 2D mode for text
+      |                       ^~~~~~~~~~~~~~~~
+Main.c:18:23: note: each undeclared identifier is reported only once for each function it appears in
+Main.c:19:5: error: implicit declaration of function 'GRRLIB_Printf' [-Wimplicit-function-declaration]
+   19 |     GRRLIB_Printf(100, 200, GRRLIB_LoadTexture(NULL), 0x00FF00FF, 2.0, "Evil and Intimidating Horse"); // Green color ARGB, font size 2.0
+      |     ^~~~~~~~~~~~~
+Main.c:19:29: error: implicit declaration of function 'GRRLIB_LoadTexture' [-Wimplicit-function-declaration]
+   19 |     GRRLIB_Printf(100, 200, GRRLIB_LoadTexture(NULL), 0x00FF00FF, 2.0, "Evil and Intimidating Horse"); // Green color ARGB, font size 2.0
+      |                             ^~~~~~~~~~~~~~~~~~
+Main.c:19:48: error: 'NULL' undeclared (first use in this function)
+   19 |     GRRLIB_Printf(100, 200, GRRLIB_LoadTexture(NULL), 0x00FF00FF, 2.0, "Evil and Intimidating Horse"); // Green color ARGB, font size 2.0
+      |                                                ^~~~
+Main.c:1:1: note: 'NULL' is defined in header '<stddef.h>'; this is probably fixable by adding '#include <stddef.h>'
+  +++ |+#include <stddef.h>
+    1 | // main.c
+Main.c:22:5: error: implicit declaration of function 'GRRLIB_Render' [-Wimplicit-function-declaration]
+   22 |     GRRLIB_Render();
+      |     ^~~~~~~~~~~~~
+make: *** [makefile:39: Main.o] Error 1
+
 
 # Directory structure
 SOURCES := source
