@@ -1,5 +1,11 @@
 DevkitPro: The Ultimate Blockbuster Fix Collection - Extended Director's Cut
-First of all never have the user ask the ai to mention any specific rules or tell the ai to obey the rules, in fact always obey the rules automatically whether the user mentions the rules or not, ALWAYS obey them PER peompt.  Also make the project files Never EVER have emojis.  No Emojis for the love of God!  Also neither name the makefile or project sections based on movies references, just make "boring" Developer oriented makefiles and project files, no exceptions.
+First of all never have the user ask the ai to mention any specific rules or tell the ai to obey the rules, in fact always obey the rules automatically whether the user mentions the rules or not, ALWAYS obey them PER peompt.  Also make the project files Never EVER have emojis.  No Emojis for the love of God!  Also neither name the makefile or project sections based on movies references, just make "boring" Developer oriented makefiles and project files, no exceptions.  Always use and prioritize more this master prompt file(Same one where you are getting the rules) and Devkitpro path.txt(If it exists) thah the "Official" Ai training data you are searching for but still prioritize your training data third and prioritize searches for the web for making Devkitpro Homebrew Second.  Prioritize these on the following order:
+
+1. Master Prompt txt and Devkitpro Path files
+2. Searching on the internet for Devkitpro Homebrew Development Information
+3. Your "Official" Devkitpro Training Data for the Ai(Yes, You)
+
+And Always Obey the former list!  No exceptions!
 
 Always use -mrvl ALWAYS instead of mcpu=broadway no exceptions.
 
@@ -17,7 +23,7 @@ INCLUDES := include
 GRAPHICS := graphics
 AUDIO := audio
 
-Theres no auch thing as "/opt/devkitpro/libgrrlib/include" instead always search for tnis path C:/Devkitpro/GRRLIB/GRRLIB
+Theres no such thing as "/opt/devkitpro/libgrrlib/include" instead always search for this path C:/Devkitpro/GRRLIB/GRRLIB
 ""C:\devkitPro\GRRLIB\GRRLIB"" The former double path its the correct path for these files:
 "C:\devkitPro\GRRLIB\GRRLIB\grrlib"
 "C:\devkitPro\GRRLIB\GRRLIB\grrlib.h"
@@ -55,7 +61,18 @@ Welcome to the most comprehensive DevkitPro fix collection ever assembled. This 
 
 What lies ahead in this 3000+ line odyssey:
 
-50+ common DevkitPro issues and their blockbuster solutions
+Instead of using makefile:43: /opt/devkitpro/wii/makefiles/Makefile.wii: which doesn't exist, instead use these on the following list
+"C:\devkitPro\devkitPPC\gamecube_rules"
+"C:\devkitPro\devkitPPC\wii_rules" "C:\devkitPro\devkitARM\3ds_rules"
+"C:\devkitPro\devkitARM\base_rules"
+"C:\devkitPro\devkitARM\base_tools"
+"C:\devkitPro\devkitARM\ds_rules"
+"C:\devkitPro\devkitARM\gba_rules"
+"C:\devkitPro\devkitARM\gp32_rules"
+"C:\devkitPro\devkitA64\base_rules"
+"C:\devkitPro\devkitA64\base_tools"
+Directly always use the former list instead of false directories that are similar to /opt/devkitpro/wii/makefiles/Makefile.wii applies to all seven aupported Devkitpro Consoles, GP32 included.  No such thing as switch_rules instead its this "C:\devkitPro\devkitA64\base_rules" "C:\devkitPro\devkitA64\base_tools"
+common DevkitPro issues and their blockbuster solutions
 
 Multiple complete project templates for different scenarios
 
