@@ -1,4 +1,97 @@
 Do you see those literal bazillions of directories there?  Only and I repeat ONLY use and point to these and the project files and directories for all consoles development.  Dont complain. Always, ALWAYS read the entire Devkitpro Paths.txt and Limit yoursef to only using these written paths and not hallucinated ones.  Always obey all of these paths without ever requiring me to mention any of them either directly or indirectly and do the same with these written directories, and don't forget to limit yourself for always searching those paths for making makefiles and compiling or using these.  Always double check and point out to these directories.  Also always make your commands use all of these prompts and make the commands limit themselves around the commands.  No exceptions of both using the commands and limiting yourself around them.  NEVER EVER put non existing include folders  that are NOT there like the non existent devkitpro/GRRLIB/include, Always obey it! grrlib.h its found directly in the C:\devkitPro\GRRLIB\GRRLIB
+AI Instruction Set: DevkitPro & GRRLIB Compilation Protocol
+
+When encountering compilation errors or warnings related to DevkitPro (devkitPPC) projects, especially involving GRRLIB, libogc, wiiuse, or font rendering, adhere to the following protocol. This protocol aims to ensure precise fixes, maintain code integrity, and provide actionable insights for the user.
+
+1. Absolute Path Adherence (Devkitpro Paths.txt)
+
+The AI shall, without exception, exclusively and exhaustively use the Devkitpro Paths.txt file for all path-related operations during the entire code generation, compilation, and troubleshooting process. This includes, but is not limited to:
+
+Makefile generation and modification: All compiler flags (-I, -L), linker flags, and tool paths (e.g., powerpc-eabi-gcc, elf2dol) must strictly derive from and verify against the paths listed in Devkitpro Paths.txt.
+
+Code correction and header inclusion: Any assumed or explicitly mentioned include paths within source code (#include <...>) or compiler commands must be validated against Devkitpro Paths.txt.
+
+Troubleshooting and diagnostics: When diagnosing "No such file or directory" errors or similar path-related issues, the AI's first and primary step is to consult Devkitpro Paths.txt to confirm the expected location and structure.
+
+Individual Path Verification: For every path mentioned or used, the AI must individually check its presence and correctness within the context of Devkitpro Paths.txt.
+
+Universal Application: This directive applies to ALL prompts and ALL supported consoles, with absolutely no exceptions. The AI's knowledge base regarding DevkitPro paths is strictly limited to Devkitpro Paths.txt unless otherwise explicitly provided by the user for a specific, temporary context.
+
+2. Code Integrity & File Replacement:
+
+When providing corrected .c or .h source code (e.g., Main.c), always explicitly instruct the user to completely replace the entire content of their existing file with the provided code. This is crucial to prevent common redefinition errors (e.g., redefinition of 'WPAD_Stick', redefinition of 'main', stray '#') caused by duplicate content.
+
+3. Header and Include Path Management:
+
+Standard DevkitPro/devkitPPC Headers: Ensure the following essential include paths are always present in CFLAGS:
+
+-I$(DEVKITPPC)/include
+
+-I$(DEVKITPPC)/include/ogc
+
+GRRLIB Headers: As per existing rules, use -I$(GRRLIB_PATH) for grrlib.h and its internal includes. Do not add explicit -I flags for GRRLIB's subdirectories like GRRLIB/include.
+
+4. GRRLIB TrueType Font (TTF) API Usage Corrections:
+
+GRRLIB_LoadTTF Argument Type: If a warning pointer targets in passing argument 1 ... differ in signedness occurs, cast the file path string literal to (const u8 *). Example: GRRLIB_LoadTTF((const u8 *)"/fat:/font.ttf", ...);
+
+GRRLIB_PrintfTTF Argument Order and Types: Strictly adhere to the GRRLIB_PrintfTTF prototype:
+void GRRLIB_PrintfTTF(int x, int y, GRRLIB_ttfFont *myFont, const char *string, unsigned int fontSize, const u32 color);
+Ensure that arguments are passed in this exact order and with the correct types.
+
+Calculating fontSize for TTF Functions: Do not attempt to access a size member directly from a GRRLIB_ttfFont object (e.g., myFont->size), as this member might not be present in all GRRLIB versions. Instead, define a LOADED_FONT_BASE_SIZE constant that matches the second argument provided to GRRLIB_LoadTTF. Calculate the effective_font_size by multiplying this LOADED_FONT_BASE_SIZE by any desired font_scale_factor. Example: unsigned int effective_font_size = (unsigned int)(LOADED_FONT_BASE_SIZE * font_scale_factor);
+
+5. Handling Persistent GRRLIB_GetTTFTextWidth/GRRLIB_GetTTFTextHeight Implicit Declarations:
+
+If compilation errors implicit declaration of function 'GRRLIB_GetTTFTextWidth' or implicit declaration of function 'GRRLIB_GetTTFTextHeight' persist, even after ensuring correct arguments and header includes as per points 3 and 4:
+
+Diagnosis: This indicates that these specific text measurement functions are genuinely not prototyped in the user's GRRLIB header files, meaning they are not directly available in their current GRRLIB version for standard use.
+
+Automated Source Code Correction:
+
+Comment out or remove the lines of code that call GRRLIB_GetTTFTextWidth and GRRLIB_GetTTFTextHeight and any logic directly dependent on their return values (e.g., text centering calculations).
+
+Replace positioning logic with hardcoded X and Y coordinates for the text.
+
+Add comments in the code to explain why these functions were removed/modified.
+
+User Guidance: Explicitly inform the user that:
+
+The removed/modified functions are not available in their GRRLIB headers.
+
+For precise text centering or detailed TTF text measurement, they may need to:
+
+Update their GRRLIB installation to a newer version.
+
+Explore alternative text rendering or measurement functions if available in their specific GRRLIB version.
+
+Implement custom text measurement logic.
+
+6. Makefile Structure and Linking:
+
+If the error make: *** No rule to make target 'build/GRRLIB_3D.o', needed by 'wii_grrlib_project.dol'. Stop. or similar errors related to GRRLIB internal .c files appear:
+
+Diagnosis: The makefile is incorrectly trying to compile GRRLIB's internal source files directly instead of linking against the pre-compiled GRRLIB library.
+
+Automated Makefile Correction:
+
+Ensure the SRCS variable in the makefile only lists the project's own source files (e.g., Main.c). Do NOT include GRRLIB's internal .c files (like GRRLIB_3D.c, GRRLIB_ttf.c, etc.).
+
+Ensure the LIBS variable in the makefile correctly includes -lgrrlib (along with -lwiiuse, -logc, -lm).
+
+Verify that LIBDIRS correctly points to the GRRLIB library directory ($(GRRLIB_PATH)).
+
+7. General Principles:
+
+Maintain strict adherence to Windows path formats (C:/path/to/file).
+
+Maintain consistency with DEVKITPRO, DEVKITPPC, and GRRLIB_PATH definitions.
+
+Provide the full, corrected Makefile and source code (if modified) in your response.
+
+Maintain a "boring," developer-oriented tone; do not use movie references or overly decorative titles.
+
+Prioritize Master Devkitpro Prompt.txt and Devkitpro Paths.txt.
 
 C:\devkitPro\.devcontainer\
 C:\devkitPro\.github\
