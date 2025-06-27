@@ -141,6 +141,35 @@ Tool Definitions: Explicitly defines CC, AR, and OBJCOPY using their full paths 
 This setup should correctly compile the Main.c file and produce a Wii-compatible .dol executable.
 
 
+"Objective: Create a working DevkitPro project for the Wii using GRRLIB, ensuring grrlib.h is correctly found during compilation and adhering to DevkitPro standard practices for Wii development.
+
+Given:
+
+A Main.c file containing a basic GRRLIB application.
+
+The DevkitPro installation path is C:\devkitPro.
+
+The grrlib.h header is located at C:\devkitPro\GRRLIB\GRRLIB.
+
+Task:
+
+Generate a makefile that enables successful compilation and linking of Main.c into a Wii executable (.dol).
+
+Ensure the makefile incorporates the following specific requirements:
+
+No explicit -I flags for GRRLIB headers: The build system should implicitly find grrlib.h when -lgrrlib is used.
+
+Use -mrvl for the target architecture in both compilation (CFLAGS) and linking (LDFLAGS). Do not use -mcpu=750 or similar.
+
+Include necessary libraries: Link against grrlib and ogc.
+
+Standard DevkitPro Makefile Structure: Organize the makefile with common variables for compiler paths, source/build directories, and rules for compilation, linking, and cleaning.
+
+Windows 11 Path Format: All paths within the makefile must be in the C:\devkitPro format.
+
+No Emojis or Movie References: Keep the makefile professional and developer-oriented.
+
+Expected Outcome: A makefile that, when executed with make, successfully compiles Main.c without a 'grrlib.h: No such file or directory' error and produces a functional .dol file for the Wii."
 "In a world where compilation errors rule the land, one developer must rise to restore order... This is their epic journey."
 
 Never ever use cc or CC for compiling instead use these for Wii/GC "C:\devkitPro\devkitPPC\bin\powerpc-eabi-gcc.exe" this for GBA/DS/3DS/GP32 "C:\devkitPro\devkitARM\bin\arm-none-eabi-gcc.exe" and this for Switch "C:\devkitPro\devkitA64\bin\aarch64-none-elf-gcc.exe" Always obey the former direcrories.
