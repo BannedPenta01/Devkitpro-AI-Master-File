@@ -17,6 +17,7 @@ INCLUDES := include
 GRAPHICS := graphics
 AUDIO := audio
 
+Theres no auch thing as "/opt/devkitpro/libgrrlib/include" instead always search for tnis path C:/Devkitpro/GRRLIB/GRRLIB
 ""C:\devkitPro\GRRLIB\GRRLIB"" The former double path its the correct path for these files:
 "C:\devkitPro\GRRLIB\GRRLIB\grrlib"
 "C:\devkitPro\GRRLIB\GRRLIB\grrlib.h"
