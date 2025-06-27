@@ -217,6 +217,61 @@ As a Master Devkitpro Developer, your task is to resolve compilation errors in D
     * Always provide the complete, corrected C source code and Makefile (if applicable) in your response.
     * Maintain the "Devkitpro" persona, adhering to all formatting and communication rules (no emojis, no movie titles, etc.).
 
+Here's a summary of all the errors encountered and their fixes throughout our chat:
+
+1. Error: 'SYS_REBOOT' undeclared
+Cause: The SYS_REBOOT macro was not recognized by the compiler. While ogc/system.h was included, in some devkitPPC setups or specific inclusion orders, this macro might not be explicitly picked up.
+
+Fix: We explicitly defined SYS_REBOOT at the top of Main.c to ensure its availability, making the system reset function call valid:
+
+C
+
+#ifndef SYS_REBOOT
+#define SYS_REBOOT 0x00000001
+#endif
+2. Error: implicit declaration of function 'GRRLIB_Print'; did you mean 'GRRLIB_Printf'?
+Cause: The code was attempting to use GRRLIB_Print, which is likely deprecated or has a different signature than intended. The compiler suggested GRRLIB_Printf.
+
+Fix: Changed the function call from GRRLIB_Print to GRRLIB_Printf, which is the standard GRRLIB function for printing text with formatting capabilities.
+
+3. Errors with GRRLIB_Printf arguments: passing argument 3... makes pointer from integer, incompatible type for argument 5, too few arguments
+Cause: The arguments passed to GRRLIB_Printf were in the incorrect order or of the wrong type according to its expected signature. GRRLIB_Printf expects a font texture (GRRLIB_texImg *) as its third argument, but a color integer was passed instead. Similarly, a string was passed where a float (zoom level) was expected, and the actual format string argument was missing.
+
+Fix: Reordered and corrected the arguments for GRRLIB_Printf to match its signature:
+GRRLIB_Printf(xpos, ypos, font_texture, color, zoom, format_string, ...)
+Specifically, GRRLIB_Font (the default GRRLIB font texture) was correctly placed as the third argument, and the zoom level was correctly placed before the text string.
+
+C
+
+GRRLIB_Printf(100, 200, &GRRLIB_Font, 0x00FF00FF, 2, "Evil and Intimidating Horse");
+4. Error: 'GRRLIB_Font' undeclared
+Cause: Even though grrlib.h was included, the GRRLIB_Font variable, which holds the default font texture, was not recognized. This happens when the variable is defined within the GRRLIB library but not explicitly declared as extern in your source file, making it inaccessible to the compiler in your Main.c.
+
+Fix: Added an extern declaration for GRRLIB_Font at the top of Main.c to inform the compiler that this variable is defined elsewhere and will be linked:
+
+C
+
+extern GRRLIB_texImg GRRLIB_Font;
+5. Error: cannot find -lgrrlib: No such file or directory (Initial linker error)
+Cause: The linker could not find the GRRLIB static library (libgrrlib.a). This typically happens if the library is not installed in a standard search path for DevkitPro, or if it wasn't built (compiled from source) in the first place.
+
+Fix Attempt 1 (Incorrect Assumption): Initially, it was assumed a pre-compiled libgrrlib.a might be missing or in a wrong path, suggesting to use devkitProUpdater or copy the .a file.
+Fix Attempt 2 (Incorrect Assumption): Later, it was thought that compiling GRRLIB as a separate project and then linking it might be the solution, involving LDFLAGS += -L and LIBS += -lgrrlib.
+
+The Real Issue & Solution (leading to subsequent errors): It was clarified that GRRLIB is not provided as a pre-compiled library (.a file) in your setup. Instead, its source files are intended to be compiled directly as part of your project. This led to the next set of errors.
+
+6. Error: fatal error: jpeglib.h: No such file or directory and Package freetype2 was not found
+Cause: When the GRRLIB source files were included for direct compilation in your project's Makefile, GRRLIB_texEdit.c was found to have a direct dependency on jpeglib.h (for JPEG image handling), and GRRLIB_ttf.c depends on freetype2 (for TrueType font rendering). These headers/libraries were missing from your DevkitPro environment.
+
+Fix: Since you explicitly requested to exclude these external dependencies (libjpeg and freetype), the solution was to remove the problematic GRRLIB source files (GRRLIB_texEdit.c and GRRLIB_ttf.c) from your project's SRCS list in the Makefile. This prevents their compilation and thus avoids the dependency errors.
+
+7. Overall Makefile Configuration for Direct Source Compilation
+Cause: Getting the Makefile to correctly compile all necessary GRRLIB and PNGU source files (except the excluded ones) directly, along with Main.c, and set up the correct include paths, required a comprehensive Makefile structure.
+
+Fix: The final Makefile provided consolidates all the GRRLIB and PNGU .c source files (excluding GRRLIB_texEdit.c and GRRLIB_ttf.c) into the SRCS variable. It also correctly sets the CFLAGS to include the specific paths for GRRLIB headers (C:\devkitPro\GRRLIB\GRRLIB) and PNGU headers (C:\devkitPro\GRRLIB\lib\pngu), and properly defines the compilation rules for these files from their respective subdirectories into your project's build directory. The LIBS are also adjusted to only include the core Wii system libraries, as GRRLIB/PNGU are now compiled directly.
+
+This detailed journey highlights the intricacies of setting up a DevkitPro project when standard library installations are not present, requiring direct management of source files and their inter-dependencies.
+
 Global Directories that you should always make and put files into whenever you are making a project file and check imported peoject files to see what kind of asset in the imported file too thats uploaded to the ai model Also always put Main.c and other Source files on the source folder:
 
 $ make
