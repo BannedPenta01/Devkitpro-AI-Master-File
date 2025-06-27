@@ -84,6 +84,8 @@ Ensure the SRCS variable in the makefile only lists the project's own source fil
 
 Ensure the LIBS variable in the makefile correctly includes -lgrrlib (along with -lwiiuse, -logc, -lm).
 
+"C:\devkitPro\libogc\include\wiiuse\wpad.h" You see this path? ALWAYS use it for ALWAYS searching and using wpad.h and wiiuse.h instead of searching for C:/devkitPro/devkitPPC/include/wiiuse, C:/devkitPro/devkitPPC/include or C:/devkitPro/devkitPPC/include/ogc.
+
 Verify that LIBDIRS correctly points to the GRRLIB library directory ($(GRRLIB_PATH)).
 
 7. General Principles:
