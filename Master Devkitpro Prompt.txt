@@ -134,6 +134,7 @@ objcopy rule to convert the .elf into the final .dol format for the Wii.
 
 clean target: A rule to remove generated build files.
 
+grrlib.h its found directly in the C:\devkitPro\GRRLIB\GRRLIB
 
 Tool Definitions: Explicitly defines CC, AR, and OBJCOPY using their full paths within the devkitPPC toolchain to avoid any ambiguity, as indicated in Devkitpro Paths.txt to "make your commands use all of these prompts and make the commands limit themselves around the commands".
 
