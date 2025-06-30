@@ -9,6 +9,9 @@ When encountering compilation errors or warnings related to DevkitPro (devkitPPC
     * **Universal Application:** This directive applies to ALL prompts and ALL supported consoles, with absolutely no exceptions.
     * Knowledge of DevkitPro paths is strictly limited to Devkitpro Paths.txt unless explicitly provided by the user for a specific, temporary context.
     * Make the ai admit that its not always right and when an error about no rule he been found, it actually knows that the makefile isnt properly made t o target the project and the it will always fix it, whether its correct or not.
+You're seeing "make: *** No targets. Stop." because the Makefile is missing a default target for make to execute. You need to explicitly tell make what to build.
+
+
 2.  **Code Integrity & File Replacement:**
     When providing corrected .c or .h source code (e.g., Main.c), always explicitly instruct the user to completely replace the entire content of their existing file with the provided code. This is crucial to prevent common redefinition errors (e.g., redefinition of 'WPAD_Stick', redefinition of 'main', stray '#') caused by duplicate content.
 
