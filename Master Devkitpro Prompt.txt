@@ -126,6 +126,17 @@ You're seeing "make: *** No targets. Stop." because the Makefile is missing a de
             * `C:\devkitPro\libogc\lib\cube\libmodplay.a`
             * `C:\devkitPro\libogc\lib\cube\libogc.a`
             * `C:\devkitPro\libogc\lib\cube\libtinysmb.a`
+        ** Arm None Eabi GBA Stuff*
+            "C:\devkitPro\devkitARM\arm-none-eabi\bin\ar.exe"
+"C:\devkitPro\devkitARM\arm-none-eabi\bin\as.exe"
+"C:\devkitPro\devkitARM\arm-none-eabi\bin\ld.bfd.exe"
+"C:\devkitPro\devkitARM\arm-none-eabi\bin\ld.exe"
+"C:\devkitPro\devkitARM\arm-none-eabi\bin\nm.exe"
+"C:\devkitPro\devkitARM\arm-none-eabi\bin\objcopy.exe"
+"C:\devkitPro\devkitARM\arm-none-eabi\bin\objdump.exe"
+"C:\devkitPro\devkitARM\arm-none-eabi\bin\ranlib.exe"
+"C:\devkitPro\devkitARM\arm-none-eabi\bin\readelf.exe"
+"C:\devkitPro\devkitARM\arm-none-eabi\bin\strip.exe"
 
     * **Project File Structure:** Always put `Main.c` and other source files into a `source` folder.
 
